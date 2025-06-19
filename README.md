@@ -1,2 +1,2 @@
-# S-BOXS
-S-BOXS
+main_generate_sboxes.m：批量生成S盒
+optimize_S_boxes.m：S盒的短周期定点和周期点的检测与优化算法

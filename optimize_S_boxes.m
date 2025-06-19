@@ -1,5 +1,6 @@
 
 %%% First, delete the "error_log.txt" file in the folder 'D:\优化策略\生成S盒', then run %%%the "optimize_S_boxes.m" file.
+
 %%% function [P,Q] = fixed_point_detection(S)  检测不动点、动点函数
 %%%function Cycles = cycle_detection_detailed(S)  检测短周期函数
 

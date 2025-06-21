@@ -1,13 +1,14 @@
 
-%%% é¦–å…ˆï¼Œåˆ é™¤æ–‡ä»¶å¤¹ 'D:\ä¼˜åŒ–ç­–ç•¥\ç”ŸæˆSç›’' ä¸­çš„ 'error_log.txt' æ–‡ä»¶ï¼Œç„¶åè¿è¡Œ %%%'optimize_S_boxes.m' æ–‡ä»¶ã€‚First, delete the "error_log.txt" file in the folder 'D:\ä¼˜åŒ–ç­–ç•¥\ç”ŸæˆSç›’', then run %%%the "optimize_S_boxes.m" file.
 
-%%% å‡½æ•° [P,Q] = å›ºå®šç‚¹æ£€æµ‹(S) æ£€æµ‹ä¸åŠ¨ç‚¹ã€åŠ¨ç‚¹å‡½æ•°å‡½æ•° [P,Q] = å›ºå®šç‚¹æ£€æµ‹(S)  æ£€æµ‹ä¸åŠ¨ç‚¹ã€åŠ¨ç‚¹å‡½æ•°
-%%%å‡½æ•° Cycles = cycle_detection_detailed(S)  æ£€æµ‹çŸ­å‘¨æœŸå‡½æ•°function Cycles = cycle_detection_detailed(S)  æ£€æµ‹çŸ­å‘¨æœŸå‡½æ•°
+%%% Ê×ÏÈ£¬É¾³ıÎÄ¼ş¼Ğ 'D:\ÓÅ»¯²ßÂÔ\Éú³ÉSºĞ' ÖĞµÄ 'error_log.txt' ÎÄ¼ş£¬È»ºóÔËĞĞ %%%'optimize_S_boxes.m' ÎÄ¼ş¡£First, delete the "error_log.txt" file in the folder 'D:\ÓÅ»¯²ßÂÔ\Éú³ÉSºĞ', then run %%%the "optimize_S_boxes.m" file.
+
+%%% º¯Êı [P,Q] = ¹Ì¶¨µã¼ì²â(S) ¼ì²â²»¶¯µã¡¢¶¯µãº¯Êıº¯Êı [P,Q] = ¹Ì¶¨µã¼ì²â(S)  ¼ì²â²»¶¯µã¡¢¶¯µãº¯Êı
+%%%º¯Êı Cycles = cycle_detection_detailed(S)  ¼ì²â¶ÌÖÜÆÚº¯Êıfunction Cycles = cycle_detection_detailed(S)  ¼ì²â¶ÌÖÜÆÚº¯Êı
 function eliminate_short_cycles_in_files()
 
-    % å®šä¹‰æ–‡ä»¶è·¯å¾„
-    input_folder = 'D:\ä¼˜åŒ–ç­–ç•¥\ç”ŸæˆSç›’';
-    output_folder = 'D:\ä¼˜åŒ–ç­–ç•¥\ä¼˜åŒ–ä¸å«çŸ­å‘¨æœŸ';
+    % ¶¨ÒåÎÄ¼şÂ·¾¶
+    input_folder = 'D:\ÓÅ»¯²ßÂÔ\Éú³ÉSºĞ';
+    output_folder = 'D:\ÓÅ»¯²ßÂÔ\ÓÅ»¯²»º¬¶ÌÖÜÆÚ';
     files = dir(fullfile(input_folder, '*.txt'));
     short_cycle_threshold = 100;
 
@@ -17,9 +18,9 @@ function eliminate_short_cycles_in_files()
         filename = fullfile(input_folder, files(file_idx).name);
         S = read_s_box(filename);
 
-          % æ£€æµ‹å‘¨æœŸå¹¶æ¶ˆé™¤çŸ­å‘¨æœŸ
+          % ¼ì²âÖÜÆÚ²¢Ïû³ı¶ÌÖÜÆÚ
         S_modified = eliminate_short_cycles(S, short_cycle_threshold);
-        % æ¶ˆé™¤ä¸åŠ¨ç‚¹å’Œåä¸åŠ¨ç‚¹
+        % Ïû³ı²»¶¯µãºÍ·´²»¶¯µã
         S = remove_fixed_anti_fixed(S);
 
     
@@ -34,59 +35,59 @@ function eliminate_short_cycles_in_files()
 end
 
 function [P, Q] = fixed_point_detection(S)
-    b = S + 1;  % è½¬æ¢ä¸º1-basedç´¢å¼•
-    P = [];     % å­˜å‚¨ä¸åŠ¨ç‚¹
-    Q = [];     % å­˜å‚¨åä¸åŠ¨ç‚¹
+    b = S + 1;  % ×ª»»Îª1-basedË÷Òı
+    P = [];     % ´æ´¢²»¶¯µã
+    Q = [];     % ´æ´¢·´²»¶¯µã
     n = numel(S);
 
-    å¯¹äº æˆ‘ = 1:ä½ 
-        å¦‚æœ b(i) ç­‰äº i
-            % ä¸åŠ¨ç‚¹ï¼šå…ƒç´ æ˜ å°„åˆ°è‡ªèº«
-            P = [P, i - 1];  % è°ƒæ•´ä¸º0-åŸºäºç´¢å¼•
+    for i = 1:n
+        if b(i) == i
+            % ²»¶¯µã£ºÔªËØÓ³Éäµ½×ÔÉí
+            P = [P, i - 1];  % µ÷ÕûÎª0-basedË÷Òı
         elseif b(i) + i == n + 1
-            % åä¸åŠ¨ç‚¹ï¼šå…ƒç´ æ˜ å°„åˆ°å…¶å¯¹ç§°ä½ç½®
+            % ·´²»¶¯µã£ºÔªËØÓ³Éäµ½Æä¶Ô³ÆÎ»ÖÃ
             Q = [Q, n - i];
-        ç»“æŸ
-    ç»“æŸ
-ç»“æŸ
+        end
+    end
+end
 
-å‡½æ•° S_modified = æ¶ˆé™¤çŸ­å‘¨æœŸ(S, çŸ­å‘¨æœŸé˜ˆå€¼)
-    % æ£€æµ‹åˆå§‹å‘¨æœŸç›’
-    å‘¨æœŸ = å‘¨æœŸæ£€æµ‹è¯¦ç»†(S);
+function S_modified = eliminate_short_cycles(S, short_cycle_threshold)
+    % ¼ì²â³õÊ¼SºĞµÄÖÜÆÚ
+    Cycles = cycle_detection_detailed(S);
     short_cycles = {};
 
-    % æ”¶é›†æ‰€æœ‰çŸ­å‘¨æœŸ
-    å¯¹äº cycle_idx = 1:numel(Cycles)
-        å¦‚æœ å‘¨æœŸ(å‘¨æœŸç´¢å¼•).é•¿åº¦ < çŸ­å‘¨æœŸé˜ˆå€¼
+    % ÊÕ¼¯ËùÓĞ¶ÌÖÜÆÚ
+    for cycle_idx = 1:numel(Cycles)
+        if Cycles(cycle_idx).Length < short_cycle_threshold
             short_cycles{end+1} = Cycles(cycle_idx).Elements;
-        ç»“æŸ
-    ç»“æŸ
+        end
+    end
 
-    % å°†Sç›’è½¬æ¢ä¸º1-åŸºäºç´¢å¼•ä»¥ä¾¿æ“ä½œ
+    % ½«SºĞ×ª»»Îª1-basedË÷ÒıÒÔ±ã²Ù×÷
     S_modified = S + 1;
 
-    % é¦–å°¾ç›¸è¿æ¶ˆé™¤çŸ­å‘¨æœŸ
+    % Ê×Î²ÏàÁ¬Ïû³ı¶ÌÖÜÆÚ
     for i = 1:numel(short_cycles)
         current_cycle = short_cycles{i};
         next_cycle = short_cycles{mod(i, numel(short_cycles)) + 1};
 
-        % å°†å½“å‰çŸ­å‘¨æœŸçš„æœ€åä¸€ä¸ªå…ƒç´ æŒ‡å‘ä¸‹ä¸€ä¸ªçŸ­å‘¨æœŸçš„ç¬¬ä¸€ä¸ªå…ƒç´ 
-        S_modified(å½“å‰å‘¨æœŸ(ç»“æŸ) + 1) = ä¸‹ä¸€å‘¨æœŸ(1) + 1;
-    ç»“æŸ
+        % ½«µ±Ç°¶ÌÖÜÆÚµÄ×îºóÒ»¸öÔªËØÖ¸ÏòÏÂÒ»¸ö¶ÌÖÜÆÚµÄµÚÒ»¸öÔªËØ
+        S_modified(current_cycle(end) + 1) = next_cycle(1) + 1;
+    end
 
-    % è½¬æ¢ä¸º0-åŸºäºç´¢å¼•ï¼Œæ¢å¤Sç›’æ ¼å¼
+    % ×ª»»Îª0-basedË÷Òı£¬»Ö¸´SºĞ¸ñÊ½
     S_modified = S_modified - 1;
 end
 
 function S = read_s_box(filename)
-    % ä»æ–‡ä»¶è¯»å–Sç›’æ•°æ®å¹¶è½¬æ¢ä¸º1Dæ•°ç»„
+    % ´ÓÎÄ¼ş¶ÁÈ¡SºĞÊı¾İ²¢×ª»»Îª1DÊı×é
     fileID = fopen(filename, 'r');
     S = fscanf(fileID, '%d');
     fclose(fileID);
 end
 
 function save_s_box(filename, S)
-    % å°†Sç›’ä¿å­˜åˆ°æ–‡ä»¶ä¸­ï¼Œä»¥16x16æ ¼å¼ä¿å­˜
+    % ½«SºĞ±£´æµ½ÎÄ¼şÖĞ£¬ÒÔ16x16¸ñÊ½±£´æ
     S_matrix = reshape(S, [16, 16]);
     fileID = fopen(filename, 'w');
     for row = 1:16
@@ -96,14 +97,14 @@ function save_s_box(filename, S)
     fclose(fileID);
 end
 function S = remove_fixed_anti_fixed(S)
-    % æ£€æµ‹ä¸åŠ¨ç‚¹å’Œåä¸åŠ¨ç‚¹
+    % ¼ì²â²»¶¯µãºÍ·´²»¶¯µã
     [P, Q] = fixed_point_detection(S);
     
-    % å¤„ç†ä¸åŠ¨ç‚¹
+    % ´¦Àí²»¶¯µã
     for p = P
-        i = p + 1; % è½¬æ¢ä¸º1-basedç´¢å¼•
+        i = p + 1; % ×ª»»Îª1-basedË÷Òı
         found = false;
-        % å‘å³æŸ¥æ‰¾å¯äº¤æ¢ä½ç½®
+        % ÏòÓÒ²éÕÒ¿É½»»»Î»ÖÃ
         for j = i+1:256
             if S(j) ~= (j-1) && S(j) ~= (i-1)
                 [S(i), S(j)] = deal(S(j), S(i));
@@ -111,7 +112,7 @@ function S = remove_fixed_anti_fixed(S)
                 break;
             end
         end
-        % å‘å·¦æŸ¥æ‰¾
+        % Ïò×ó²éÕÒ
         if ~found
             for j = i-1:-1:1
                 if S(j) ~= (j-1) && S(j) ~= (i-1)
@@ -120,59 +121,57 @@ function S = remove_fixed_anti_fixed(S)
                     break;
                 end
             end
-        ç»“æŸend
-    ç»“æŸend
+        end
+    end
     
-    % å¤„ç†åä¸åŠ¨ç‚¹
-    å¯¹äº q = Qfor q = Q
-        i = 256 - q; % è½¬æ¢ä¸º1-basedç´¢å¼•i = 256 - q; % è½¬æ¢ä¸º1-basedç´¢å¼•
-        found = false;found = false;
-        å¯¹äº j = i+1:256for j = i+1:256
-            if S(j) ~= (256 - j) && S(j) ~= (256 - i)if S(j) ~= (256 - j) && S(j) ~= (256 - i)
-                [S(i), S(j)] = äº¤æ¢(S(j), S(i));[S(i), S(j)] = deal(S(j), S(i));
-                found = true;found = true;
-                break;break;
-            ç»“æŸend
-        ç»“æŸend
-        å¦‚æœæœªæ‰¾åˆ°if ~found
-            å¯¹äº j = i-1:-1:1for j = i-1:-1:1
-                if S(j) ~= (256 - j) && S(j) ~= (256 - i)if S(j) ~= (256 - j) && S(j) ~= (256 - i)
-                    [S(i), S(j)] = äº¤æ¢(S(j), S(i));[S(i), S(j)] = deal(S(j), S(i));
-                    found = true;found = true;
-                    break;break;
-                ç»“æŸend
-            ç»“æŸend
-        ç»“æŸend
-    ç»“æŸend
+    % ´¦Àí·´²»¶¯µã
+    for q = Q
+        i = 256 - q; % ×ª»»Îª1-basedË÷Òı
+        found = false;
+        for j = i+1:256
+            if S(j) ~= (256 - j) && S(j) ~= (256 - i)
+                [S(i), S(j)] = deal(S(j), S(i));
+                found = true;
+                break;
+            end
+        end
+        if ~found
+            for j = i-1:-1:1
+                if S(j) ~= (256 - j) && S(j) ~= (256 - i)
+                    [S(i), S(j)] = deal(S(j), S(i));
+                    found = true;
+                    break;
+                end
+            end
+        end
+    end
 end
 
-functionå‡½æ•° Cycles = cycle_detection_detailed(S)Cycles = cycle_detection_detailed(S)
-    A = S + 1;  % MATLABæ•°ç»„ç´¢å¼•ä»1å¼€å§‹ï¼Œè°ƒæ•´ç´¢å¼•A = S + 1;  % MATLABæ•°ç»„ç´¢å¼•ä»1å¼€å§‹ï¼Œè°ƒæ•´ç´¢å¼•
-    n = numel(A);n = numel(A);
-    visited = false(1, n);  % æ ‡è®°æ˜¯å¦å·²è®¿é—®visited = false(1, n);  % æ ‡è®°æ˜¯å¦å·²è®¿é—®
-    Cycles = struct('Length', {}, 'Elements', {});  % åˆå§‹åŒ–ç»“æ„ä½“å­˜å‚¨å‘¨æœŸä¿¡æ¯Cycles = struct('Length', {}, 'Elements', {});  % åˆå§‹åŒ–ç»“æ„ä½“å­˜å‚¨å‘¨æœŸä¿¡æ¯
+function Cycles = cycle_detection_detailed(S)
+    A = S + 1;  % MATLABÊı×éË÷Òı´Ó1¿ªÊ¼£¬µ÷ÕûË÷Òı
+    n = numel(A);
+    visited = false(1, n);  % ±ê¼ÇÊÇ·ñÒÑ·ÃÎÊ
+    Cycles = struct('Length', {}, 'Elements', {});  % ³õÊ¼»¯½á¹¹Ìå´æ´¢ÖÜÆÚĞÅÏ¢
 
-    å¯¹äº i = 1:nfor i = 1:n
-        å¦‚æœ ~visited(i)if ~visited(i)
-            b = i;b = i;
-            åºåˆ— = i;sequence = i;
-            visited(i) = true;visited(i) = true;
-            while truewhile true
-                b = A(b);b = A(b);
-                sequence = [sequence, b];  % è®°å½•è®¿é—®è¿‡çš„è·¯å¾„sequence = [sequence, b];  % è®°å½•è®¿é—®è¿‡çš„è·¯å¾„
-                å¦‚æœå·²è®¿é—®(b)if visited(b)
-                    % æ£€æŸ¥æ˜¯å¦å›åˆ°äº†å‘¨æœŸèµ·å§‹ç‚¹
-                    å¦‚æœ b ç­‰äº iif b == i
-                        å‘¨æœŸé•¿åº¦ = åºåˆ—é•¿åº¦ - 1;  % è®¡ç®—å‘¨æœŸé•¿åº¦numel(sequence) - 1;  % è®¡ç®—å‘¨æœŸé•¿åº¦
-                        Cycles(end+1).Length = cycle_length;  % ä¿å­˜å‘¨æœŸé•¿åº¦Cycles(end+1).Length = cycle_length;  % ä¿å­˜å‘¨æœŸé•¿åº¦
-                        Cycles(end).Elements = sequence(1:end-1) - 1;  % ä¿å­˜å‘¨æœŸå…ƒç´ ï¼Œè°ƒæ•´ä¸º0-basedç´¢å¼•Cycles(end).Elements = sequence(1:end-1) - 1;  % ä¿å­˜å‘¨æœŸå…ƒç´ ï¼Œè°ƒæ•´ä¸º0-basedç´¢å¼•
-                    ç»“æŸend
-                    break;break;
-                ç»“æŸend
-                è®¿é—®è¿‡(b) = çœŸ;visited(b) = true;
-            ç»“æŸend
-        ç»“æŸend
-    ç»“æŸend
+    for i = 1:n
+        if ~visited(i)
+            b = i;
+            sequence = i;
+            visited(i) = true;
+            while true
+                b = A(b);
+                sequence = [sequence, b];  % ¼ÇÂ¼·ÃÎÊ¹ıµÄÂ·¾¶
+                if visited(b)
+                    % ¼ì²éÊÇ·ñ»Øµ½ÁËÖÜÆÚÆğÊ¼µã
+                    if b == i
+                        cycle_length = numel(sequence) - 1;  % ¼ÆËãÖÜÆÚ³¤¶È
+                        Cycles(end+1).Length = cycle_length;  % ±£´æÖÜÆÚ³¤¶È
+                        Cycles(end).Elements = sequence(1:end-1) - 1;  % ±£´æÖÜÆÚÔªËØ£¬µ÷ÕûÎª0-basedË÷Òı
+                    end
+                    break;
+                end
+                visited(b) = true;
+            end
+        end
+    end
 end
-
-   

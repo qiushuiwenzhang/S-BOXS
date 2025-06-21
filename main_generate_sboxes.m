@@ -1,53 +1,53 @@
-函数 main_generate_sboxes()
+function main_generate_sboxes()
     % 创建目标文件夹
-    target_dir = 'D:\优化策略\生成S盒'
-    如果 ~存在(目标目录, '目录')
-        创建目录(目标目录);
-    结束
+    target_dir = 'D:\优化策略\生成S盒';
+    if ~exist(target_dir, 'dir')
+        mkdir(target_dir);
+    end
 
-    % 生成2000个S盒 根据不同策略选择少
-    对于 我 = 1:2000
-        尝试
-            fprintf('正在生成第 %d 个S盒...\n'', i);
-            S_box = 生成S盒();
+    % 生成2000个S盒 根据不同策略选择。
+    for i = 1:2000
+        try
+            fprintf('正在生成第 %d 个S盒...\n', i);
+            S_box = generate_sbox();
             
             filename = sprintf('S_box_%03d.txt', i);
             full_path = fullfile(target_dir, filename);
             
             dlmwrite(full_path, S_box, 'delimiter', ' ', 'precision', '%3d');
-            fprintf('成功保存到 %s\\n'， full_path);
+            fprintf('成功保存到 %s\n', full_path);
             
-        抓住 我
+        catch ME
          
-            fprintf('生成第 %d 个S盒时发生错误: %s\\n'， i, ME.message);
-            log_error(目标目录, i, ME.消息);
-        结束
-    结束
-结束
+            fprintf('生成第 %d 个S盒时发生错误: %s\n', i, ME.message);
+            log_error(target_dir, i, ME.message);
+        end
+    end
+end
 
-函数 记录错误(目标目录, 索引, 消息)
+function log_error(target_dir, index, msg)
   
-    error_log = fullfile(target_dir, 'error_log.'txt');
-    fid = 打开文件(错误日志, 'a');
-    如果 文件描述符 == -1
-        错误('无法打开错误日志文件');
-    结束
+    error_log = fullfile(target_dir, 'error_log.txt');
+    fid = fopen(error_log, 'a');
+    if fid == -1
+        error('无法打开错误日志文件');
+    end
     fprintf(fid, 'S盒 %03d 错误: %s\n', index, msg);
-    关闭文件(文件描述符);
-结束
+    fclose(fid);
+end
 
-函数 S_box = 生成S盒()
+function S_box = generate_sbox()
  
     u = 100;
-    速度 = 100;
-    最大尝试次数 = 1000;
+    v = 100;
+    max_attempts = 1000;
     B = [];
-    成功 = 假;
+    success = false;
     
    
-    尝试 次数 = 1：最大尝试次数
-        x0 = 随机数();
-        随机数y0 = 生成的随机数();
+    for attempt = 1:max_attempts
+        x0 = rand();
+        y0 = rand();
         
         % 迭代混沌映射
         [x_seq, y_seq] = iterate_2desm(x0, y0, u, v, 200 + 64);
@@ -99,17 +99,17 @@
     S_box = reshape(S_box, 16, 16);
 end
 
-函数 [x_seq, y_seq] = iterate_2desm(x0, y0, u, v, iterations)
+function [x_seq, y_seq] = iterate_2desm(x0, y0, u, v, iterations)
     x_seq = zeros(1, iterations);
     y_seq = zeros(1, iterations);
     x = x0;
-    y =  y0 ;
-    对于 我 = 1:迭代次数
+    y = y0;
+    for i = 1:iterations
         x_new = sin(u * cos(v / y));
         y_new = cos(u * sin(v * x^2));
         x_seq(i) = x_new;
         y_seq(i) = y_new;
         x = x_new;
-        y = y_新;
-    结束
-结束
+        y = y_new;
+    end
+end

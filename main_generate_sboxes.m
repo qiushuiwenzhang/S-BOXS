@@ -1,12 +1,12 @@
 function main_generate_sboxes()
     % 创建目标文件夹
-    target_dir = 'D:\优化策略\生成S盒';
+    target_dir = 'D:\MATLAB仿真程序\原始S盒';
     if ~exist(target_dir, 'dir')
         mkdir(target_dir);
     end
 
-    % 生成2000个S盒 根据不同策略选择。
-    for i = 1:2000
+    % 生成4000个S盒 根据不同策略选择。
+    for i = 1:4000
         try
             fprintf('正在生成第 %d 个S盒...\n', i);
             S_box = generate_sbox();

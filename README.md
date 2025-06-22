@@ -5,4 +5,4 @@ cycle_detection_detailed.m：检测S-box的短周期
 calculateNonlinearity.m；nonlinearity.m：计算S-box的非线性
 fenchatu.m：计算分岔图
 sine_fuch_1.m：计算lyapunov指数
-优化.rar，优化.rar，筛选.rar：生成的S盒集合。由于随机因素，每个S盒不一定是完全相同的。
+优化.rar，优化.rar，筛选.rar：The generated set of S-boxes. Due to random factors, the set of S-boxes generated each time may not be exactly the same.

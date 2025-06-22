@@ -1,14 +1,8 @@
-
-
-%%% 首先，删除文件夹 'D:\优化策略\生成S盒' 中的 'error_log.txt' 文件，然后运行 %%%'optimize_S_boxes.m' 文件。First, delete the "error_log.txt" file in the folder 'D:\优化策略\生成S盒', then run %%%the "optimize_S_boxes.m" file.
-
-%%% 函数 [P,Q] = 固定点检测(S) 检测不动点、动点函数函数 [P,Q] = 固定点检测(S)  检测不动点、动点函数
-%%%函数 Cycles = cycle_detection_detailed(S)  检测短周期函数function Cycles = cycle_detection_detailed(S)  检测短周期函数
 function eliminate_short_cycles_in_files()
 
     % 定义文件路径
-    input_folder = 'D:\优化策略\生成S盒';
-    output_folder = 'D:\优化策略\优化不含短周期';
+    input_folder = 'D:\MATLAB仿真程序\原始S盒';
+    output_folder = 'D:\MATLAB仿真程序\优化';
     files = dir(fullfile(input_folder, '*.txt'));
     short_cycle_threshold = 100;
 
